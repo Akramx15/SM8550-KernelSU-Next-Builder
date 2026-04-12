@@ -57,11 +57,15 @@ jobs:
         wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/tags/android-14.0.0_r1/clang-r487747c.tar.gz
         tar -xf clang-r487747c.tar.gz
         rm clang-r487747c.tar.gz
+        # Ensure binaries are executable
+        chmod -R +x bin/
 
     - name: Build Kernel
       run: |
         cd kernel
-        export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+        # Recursively find the path to clang and add it to PATH
+        CLANG_DIR=$(find $GITHUB_WORKSPACE/toolchain -type f -name "clang" | grep bin/clang | head -n 1 | xargs dirname)
+        export PATH=$CLANG_DIR:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
         export CROSS_COMPILE=aarch64-linux-gnu-
