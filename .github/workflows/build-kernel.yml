@@ -50,16 +50,13 @@ jobs:
 
     - name: Setup Clang Toolchain
       run: |
-        mkdir -p toolchain
-        cd toolchain
-        wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r487747c.tar.gz
-        tar -xf clang-r487747c.tar.gz
-        rm clang-r487747c.tar.gz
+        # Download official AOSP Clang repository directly (it contains the latest and r487747c versions)
+        git clone https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86 toolchain -b master --depth=1
 
     - name: Build Kernel
       run: |
         cd kernel
-        export PATH=$GITHUB_WORKSPACE/toolchain/bin:$PATH
+        export PATH=$GITHUB_WORKSPACE/toolchain/clang-r487747c/bin:$PATH
         export ARCH=arm64
         export SUBARCH=arm64
         export KBUILD_BUILD_USER="Akramx15"
