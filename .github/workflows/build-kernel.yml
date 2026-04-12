@@ -39,17 +39,19 @@ jobs:
     - name: Apply SUSFS patch
       run: |
         cd kernel
-        git clone https://github.com/sidex15/susfs4ksu-module.git susfs
+        git clone https://gitlab.com/simonpunk/susfs4ksu.git -b gki-android13-5.15 susfs
         cp -r susfs/kernel_patches/fs/* fs/
         cp -r susfs/kernel_patches/include/linux/* include/linux/
-        patch -p1 < susfs/kernel_patches/50_add_susfs_in_gki_android13_5.15.patch || true
-        patch -p1 < susfs/kernel_patches/10_enable_susfs_for_ksu.patch || true
+        
+        # Apply SUSFS patches
+        patch -p1 < susfs/kernel_patches/50_add_susfs_in_gki-android13-5.15.patch || true
+        # Also apply mac patch if needed
+        patch -p1 < susfs/kernel_patches/fs/susfs.c.patch || true
 
     - name: Setup Clang Toolchain
       run: |
         mkdir -p toolchain
         cd toolchain
-        # Download verified AOSP Clang 17
         wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/master/clang-r487747c.tar.gz
         tar -xf clang-r487747c.tar.gz
         rm clang-r487747c.tar.gz
