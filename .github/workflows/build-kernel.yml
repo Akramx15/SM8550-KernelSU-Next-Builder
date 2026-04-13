@@ -43,10 +43,15 @@ jobs:
         cp -r susfs/kernel_patches/fs/* fs/
         cp -r susfs/kernel_patches/include/linux/* include/linux/
         
-        # Apply SUSFS patches
-        patch -p1 < susfs/kernel_patches/50_add_susfs_in_gki-android13-5.15.patch || true
-        # Also apply mac patch if needed
-        patch -p1 < susfs/kernel_patches/fs/susfs.c.patch || true
+        # Apply SUSFS patches (Removed '|| true' so we can catch mismatches)
+        patch -p1 < susfs/kernel_patches/50_add_susfs_in_gki-android13-5.15.patch
+        patch -p1 < susfs/kernel_patches/fs/susfs.c.patch
+        patch -p1 < susfs/kernel_patches/include/linux/susfs.h.patch || true
+        
+        # Apply KernelSU SUSFS patch
+        cp susfs/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch KernelSU-Next/ || cp susfs/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch KernelSU/ || true
+        cd KernelSU-Next || cd KernelSU
+        patch -p1 --forward < 10_enable_susfs_for_ksu.patch || true
 
     - name: Setup Clang Toolchain
       run: |
