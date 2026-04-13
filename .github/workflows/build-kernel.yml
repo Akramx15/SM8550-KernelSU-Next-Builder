@@ -16,7 +16,14 @@ jobs:
         haskell: true
         large-packages: true
         docker-images: true
-        swap-storage: true
+        swap-storage: false
+
+    - name: Create Massive Swap Space
+      run: |
+        sudo fallocate -l 24G /swapfile
+        sudo chmod 600 /swapfile
+        sudo mkswap /swapfile
+        sudo swapon /swapfile
 
     - name: Setup environment
       run: |
