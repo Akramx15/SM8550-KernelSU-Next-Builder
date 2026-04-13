@@ -45,8 +45,6 @@ jobs:
         
         # Apply SUSFS patches (Removed '|| true' so we can catch mismatches)
         patch -p1 < susfs/kernel_patches/50_add_susfs_in_gki-android13-5.15.patch
-        patch -p1 < susfs/kernel_patches/fs/susfs.c.patch
-        patch -p1 < susfs/kernel_patches/include/linux/susfs.h.patch || true
         
         # Apply KernelSU SUSFS patch
         cp susfs/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch KernelSU-Next/ || cp susfs/kernel_patches/KernelSU/10_enable_susfs_for_ksu.patch KernelSU/ || true
